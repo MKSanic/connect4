@@ -28,8 +28,6 @@ pos = [
 coptions = Options()
 coptions.headless = True
 browser = webdriver.Chrome(options=coptions)
-browser.get(site)
-browser.find_element_by_xpath('//*[@id="hide_solution_link"]').click()  # Clicks on show solutions
 
 
 def scan():
@@ -47,6 +45,13 @@ def turn():
         return 0
     else:
         return 1
+
+
+def bm(s):
+    pyag.click(690, 1000)
+    time.sleep(0.2)
+    pyag.typewrite(s + "\n", 0.01)
+    pyag.click(740, 910)
 
 
 def update(where):
@@ -86,10 +91,15 @@ class main:
     kill = False
 
     def __init__(self):
-        while True:
+        while not self.kill:
             self.real()
 
     def real(self):
+        browser.get(site)
+        browser.find_element_by_xpath('//*[@id="hide_solution_link"]').click()  # Clicks on show solutions
+        ys = []
+        browser.find_element_by_xpath('//*[@id="new"]').click()
+        time.sleep(2)
         pyag.click(pos[3][0])
         update(pos[3][0])
         while True:
@@ -99,9 +109,10 @@ class main:
                     time.sleep(10)
                     pyag.click(680, 80)
                     time.sleep(5)
-                    pyag.click(1060, 1000)
-                    time.sleep(10)
-                    browser.find_element_by_xpath('//*[@id="new"]').click()
+                    pyag.click(800, 1000)
+                    time.sleep(1)
+                    pyag.click(925, 785)
+                    time.sleep(2)
                     return
             time.sleep(1)
             yellows = scan()  # my turn, scan
@@ -112,6 +123,7 @@ class main:
                     their_move = v
                     break
             choice = update(their_move)
+            bm("I will win in at most " + browser.find_element_by_xpath('//*[@id="solution_header"]').text.split(" in ")[1])
             pyag.click(pos[choice][0])
             update(pos[choice][0])
             while turn() == 0:
